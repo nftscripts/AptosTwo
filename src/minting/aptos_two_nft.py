@@ -40,6 +40,11 @@ class AptosTwoNFT(AptosAccount):
             expiration_timestamps_secs=int(time()) + 600,
             chain_id=await self.rest_client.chain_id()
         )
+        simulation = await self.simulate_transaction(raw_transaction)
+        if simulation is False:
+            logger.error(f'[{self.wallet_address}] | Simulation failed')
+            return
+
         tx_hash = await self.sign_transaction(raw_transaction)
         await sleep(2)
         await self.rest_client.wait_for_transaction(tx_hash)

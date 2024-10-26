@@ -26,3 +26,9 @@ class AptosAccount:
         signed_transaction = SignedTransaction(raw_transaction, authenticator)
         tx_hash = await self.rest_client.submit_bcs_transaction(signed_transaction)
         return tx_hash
+
+    async def simulate_transaction(self, raw_transaction: RawTransaction) -> bool:
+        simulation: dict = await self.rest_client.simulate_transaction(raw_transaction, self.account)
+        if simulation[0]['success'] is True:
+            return True
+        return False
